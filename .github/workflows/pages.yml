@@ -1,0 +1,28 @@
+# Sonat IG köprüsü: hazır Pages akışı 10 dk dağıtım sınırına takılıyordu (büyük video seti).
+# Kendi akışımız: derleme yok, depo olduğu gibi yayınlanır; deploy-pages zaman aşımı uzatıldı.
+name: pages
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages
+  cancel-in-progress: false
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    environment:
+      name: github-pages
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+      - uses: actions/deploy-pages@v4
+        with:
+          timeout: 3000000
